@@ -1,0 +1,127 @@
+﻿@page "/edit-form1"
+@using BlazorSampleProject.Models
+@using System.Data.Entity
+
+<h1>EditFormサンプル（エラーをまとめて表示）</h1>
+
+<EditForm Model="model" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label>名前</label>
+                <InputText class="form-control" @bind-Value="@model.Name"/>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label>誕生日</label>
+                <InputDate class="form-control" @bind-Value="@model.Birthday"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label>年齢</label>
+                <InputNumber class="form-control" @bind-Value="@model.Age"/>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label>性別</label>
+                <InputRadioGroup class="form-control" @bind-Value="@model.GenderType">
+                    @foreach (GenderType value in Enum.GetValues(typeof(GenderType)))
+                    {
+                        <br/>
+                        <InputRadio Value="@value"/>@value.GetDisplayName()
+                    }
+                </InputRadioGroup>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label>プロフィール</label>
+                <InputTextArea class="form-control" @bind-Value="@model.Profile"/>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label>都道府県</label>
+                <InputSelect class="form-control" @bind-Value="@model.Prefecture">
+                    @foreach (Prefecture value in Enum.GetValues(typeof(Prefecture)))
+                    {
+                        <option Value="@value">@value.GetDisplayName()</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label>画像</label>
+                <InputFile class="form-control" OnChange="LoadFile" multiple/>
+                <span>ファイル数：@fileCount</span>
+            </div>
+        </div>
+
+    </div>
+    <button type="submit" class="btn btn-primary">登録</button>
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+</EditForm>
+
+<p style="margin-top: 20px;">
+    @if (isSuccess)
+    {
+        @resultMessage
+
+        <ul>
+            <li>名前:@model.Name</li>
+            <li>誕生日:@model.Birthday.ToString("yyyy/MM/dd")</li>
+            <li>年齢:@model.Age</li>
+            <li>性別:@model.GenderType.GetDisplayName()</li>
+            <li>プロフィール:@model.Profile</li>
+            <li>都道府県:@model.Prefecture.GetDisplayName()</li>
+        </ul>
+    }
+</p>
+
+@code {
+    private FormViewModel model = new FormViewModel();
+
+    private string resultMessage;
+    private bool isSuccess = false;
+    private int fileCount = 0;
+
+    private void OnValidSubmit()
+    {
+
+        isSuccess = true;
+        resultMessage = "登録完了！";
+
+        // https://qiita.com/nobu17/items/ca17f46abaa3f980c00b
+        // OnSubmit を使用して、引数の受け渡しでチェックすることができる。 独自のチェックを含めることが可能？
+        // https://docs.microsoft.com/ja-jp/aspnet/core/blazor/forms-validation?view=aspnetcore-6.0
+        // 基本検証のOnInitializedでイベントを登録すると検証できるようだ。
+    }
+    private void LoadFile(InputFileChangeEventArgs e)
+    {
+        //InputFileChangeEventArgs ev = (InputFileChangeEventArgs)e;
+        fileCount = e.FileCount;
+    }
+    private void IncrementCount()
+    {
+        model.Age++;
+
+        using (var entity = new dddContext())
+        {
+            //var m = await entity.Areas.FirstOrDefaultAsync(r => r.AreaId == 1);
+            //var list = await (from b in entity.Areas where b.AreaId == 1 select b).ToListAsync();
+            var m = entity.Areas.FirstOrDefault(r => r.AreaId == 1);
+            model.Profile = m.AreaName;
+        }
+    }
+
+}
