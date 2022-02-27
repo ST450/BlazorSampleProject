@@ -1,13 +1,13 @@
-﻿@page "/edit-form3"
+﻿@page "/edit-form5"
 @using BlazorSampleProject.Models
 @using System.Data.Entity
 
-<h1>EditFormサンプル（入力中の登録ボタン非活性）</h1>
+<h1>EditFormサンプル（CustomValidatorを使用したチェック）</h1>
 
 <EditForm EditContext="@editContext" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator/>
-@*    <CustomValidator @ref="customValidator" />
-*@    <ValidationSummary />
+    <CustomValidator @ref="customValidator" />
+    <ValidationSummary />
     <div class="row">
         <div class="col-3">
             <div class="form-group">
@@ -18,7 +18,7 @@
         <div class="col-3">
             <div class="form-group">
                 <label>誕生日</label>
-                <InputDate class="form-control" @bind-Value="@model.Birthday"/>
+                <InputDate id="Birthday" class="form-control" @bind-Value="@model.Birthday"/>
             </div>
         </div>
     </div>
@@ -73,22 +73,12 @@
 </EditForm>
 
 <p style="margin-top: 20px;">
-    @if (isSuccess)
-    {
         @resultMessage
-
-        <ul>
-            <li>名前:@model.Name</li>
-            <li>誕生日:@model.Birthday.ToString("yyyy/MM/dd")</li>
-            <li>年齢:@model.Age</li>
-            <li>性別:@model.GenderType.GetDisplayName()</li>
-            <li>プロフィール:@model.Profile</li>
-            <li>都道府県:@model.Prefecture.GetDisplayName()</li>
-        </ul>
-    }
 </p>
 
 @code {
+    private CustomValidator customValidator;
+
     private FormViewModel model = new FormViewModel();
 
     private string resultMessage;
@@ -108,9 +98,23 @@
 
     private void OnValidSubmit()
     {
+        customValidator.ClearErrors();
+        var errors = new Dictionary<string, List<string>>();
+        if (model.Birthday >= DateTime.Today)
+        {
+                errors.Add("Birthday", new List<string>() { "誕生日は未来日の入力できません（submit check）" });
+        }
 
-        isSuccess = true;
-        resultMessage = "登録完了！";
+        if (errors.Count > 0)
+        {
+            customValidator.DisplayErrors(errors);
+        }
+        else
+        {
+            isSuccess = true;
+            resultMessage = "登録完了！";
+        }
+
 
     }
     private void LoadFile(InputFileChangeEventArgs e)
