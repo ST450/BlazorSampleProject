@@ -1,0 +1,10 @@
+﻿<div>
+    <img src="@src" @attributes="Attoributes"/>
+</div>
+@code {
+    [Parameter]
+    public string src { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> Attoributes { get; set; }
+}

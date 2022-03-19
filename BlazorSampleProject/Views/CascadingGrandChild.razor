@@ -1,0 +1,13 @@
+﻿@using BlazorSampleProject.Models
+<h2>カスケーディングパラメータ Grand Child</h2>
+
+<p>GuestMessage: @GuestMessage.GetText()</p>
+<p>NameMessage: @NameMessage.GetText()</p>
+
+@code {
+    [CascadingParameter(Name = "guest")]
+    protected Message GuestMessage { get; set; }
+
+    [CascadingParameter(Name = "named")]
+    protected Message NameMessage { get; set; }
+}

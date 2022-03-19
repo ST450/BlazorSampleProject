@@ -1,0 +1,30 @@
+﻿@page "/template-component"
+
+<h1>RenderFragmentテンプレートコンポーネントサンプル</h1>
+
+<RanderFragmentTemplate Items=employees Context="Employee">
+    <TableHeader>
+        <th>ID</th>
+        <th>名前</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@Employee.Id</td>
+        <td>@Employee.Name</td>
+    </RowTemplate>
+</RanderFragmentTemplate>
+
+@code {
+    class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    private List<Employee> employees = new List<Employee>
+    {
+        new Employee {Id = 1, Name = "田中　太郎"},
+        new Employee {Id = 2, Name = "高橋　花子"},
+        new Employee {Id = 3, Name = "鈴木　次郎"},
+    };
+
+}

@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Linq;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorSampleProject.ViewModels

@@ -1,0 +1,23 @@
+﻿@page "/cascading"
+
+@using BlazorSampleProject.Models
+
+<h1>カスケーディングパラメータサンプル</h1>
+
+<CascadingValue Value="@GuestMessage" Name="guest">
+    <CascadingValue Value="@NameMessage" Name="named">
+        <CascadingChild/>
+    </CascadingValue>
+</CascadingValue>
+
+<CascadingChild2 @bind-GuestMessage="GuestMessage" @bind-NameMessage="NameMessage"/>
+
+<p>Parameter渡し2</p>
+<CascadingChild3 GuestMessage = "@GuestMessage" NameMessage = "@NameMessage"/>
+
+@code {
+    private Message GuestMessage { get; set; } = new Message();
+
+    private Message NameMessage { get; set; } = new Message("test name");
+
+}

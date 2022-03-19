@@ -1,0 +1,16 @@
+﻿<p>
+    <button class="btn btn-primary" @onclick="OnButtonClicked">
+        ボタン2
+    </button>
+</p>
+
+@code {
+    [Parameter]
+    public EventCallback<int> OnClickCallback { get; set; }
+
+    private async Task OnButtonClicked()
+    {
+        var r = new Random();
+        await OnClickCallback.InvokeAsync(r.Next(0, 9));
+    }
+}

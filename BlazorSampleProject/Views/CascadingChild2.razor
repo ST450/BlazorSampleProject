@@ -1,0 +1,25 @@
+﻿@using BlazorSampleProject.Models
+<h2>カスケーディングパラメータ Child Name無し</h2>
+
+<p>GuestMessage: @GuestMessage.GetText()</p>
+<p>NameMessage: @NameMessage.GetText()</p>
+
+@*<CascadingGrandChild/>
+*@
+@code {
+    [Parameter]
+    public Message GuestMessage { get; set; }
+    [Parameter]
+    public EventCallback<Message> GuestMessageChanged { get; set; }
+
+    [Parameter]
+    public Message NameMessage { get; set; }
+    [Parameter]
+    public EventCallback<Message> NameMessageChanged  { get; set; }
+
+    protected override void OnInitialized()
+    {
+        
+    }
+
+}
